@@ -4,8 +4,8 @@ import pandas
 import pytesseract
 from PIL import Image
 import pdfplumber
-from src.database.db_connection import save_dataframe, save_and_return_id
-from src.preprocessing.text_cleaner import clean_text
+from backend.src.database.db_connection import save_dataframe, save_and_return_id
+from backend.src.preprocessing.text_cleaner import clean_text
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
