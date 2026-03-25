@@ -1,26 +1,18 @@
-from fastapi import APIRouter
-from blockchain.blockchain import Blockchain
-import pandas
-from src.database.db_connection import save_dataframe
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from backend.src.dependencies import get_db
 
-router = APIRouter()
-blockchain = Blockchain()
-connection_string = "mysql+pymysql://root:1234@localhost:3306/fintech_db"
 
-@router.post("/blockchain/transaction")
-def add_transaction(data: dict):
-    # Blockchain'e ekle
-    blockchain.add_transaction(data)
+# Router tanımı
+blockchain_service = APIRouter()
 
-    # SQL'e logla
-    df = pandas.DataFrame([{
-        "meta_key": "transaction",
-        "meta_value": str(data)
-    }])
-    save_dataframe(df, "transactions_metadata", connection_string)
+# Örnek endpoint: blockchain durumu
+@blockchain_service.get("/api/blockchain/status")
+def get_status(db: Session = Depends(get_db)):
+    return {"status": "Blockchain servisi aktif"}
 
-    return {"status": "ok", "chain_length": len(blockchain.chain)}
-
-@router.get("/blockchain/chain")
-def get_chain():
-    return {"chain": blockchain.chain}
+# Örnek endpoint: wallet bilgisi
+@blockchain_service.get("/api/blockchain/wallet")
+def get_wallet(db: Session = Depends(get_db)):
+    # Burada DB veya blockchain logic eklenebilir
+    return {"wallet": "0x123456789abcdef"}
